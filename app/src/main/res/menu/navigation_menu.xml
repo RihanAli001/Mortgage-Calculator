@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/emiCalcuFrag"
+        android:title="@string/app_name"
+        android:icon="@drawable/palette"/>
+
+    <item
+        android:id="@+id/simpleCalcuFrag"
+        android:title="Simple Calculator"
+        android:icon="@drawable/schedule"/>
+</menu>

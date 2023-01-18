@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Mortgage Calculator</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="see_details">See details</string>
+    <string name="interest_rate">Rate (% Monthly)</string>
+    <string name="down_payment">Down payment</string>
+    <string name="length_of_loan">Length of loan</string>
+    <string name="loan_amount">Loan Amount</string>
+    <string name="mortgage">Mortgage</string>
+    <string name="calculate">Calculate</string>
+    <string name="down_payment_amount">%s /-</string>
+    <string name="result_emi_amount">%s/mo</string>
+    <string name="loan_length_count">%s years,%s month</string>
+</resources>
