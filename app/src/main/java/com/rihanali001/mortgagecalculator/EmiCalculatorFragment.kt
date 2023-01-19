@@ -23,13 +23,13 @@ class EmiCalculatorFragment : Fragment() {
         binding.loanAmountEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!p0.isNullOrEmpty() && p0.toString() != "."){
-                    if (binding.downPaymentSlider.value > p0.toString().toFloat()) {
+                if (!isNullOrEmptyOrSinglePoint(p0)){
+                    if (binding.downPaymentSlider.value > p0.toString().toFloat())
                         binding.downPaymentSlider.value = floor(p0.toString().toDouble()).toFloat()
-                    }
-                    binding.downPaymentSlider.valueTo = floor(p0.toString().toDouble()).toFloat()
-                    calculateEmi()
+                    if (p0.toString().toFloat() >= 1f)
+                        binding.downPaymentSlider.valueTo = floor(p0.toString().toDouble()).toFloat()
                 }
+                calculateEmi()
             }
             override fun afterTextChanged(p0: Editable?) {}
         })
@@ -46,12 +46,13 @@ class EmiCalculatorFragment : Fragment() {
         binding.loanPercentageRateEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (!p0.isNullOrEmpty() && p0.toString() != "."){
-                    if (p0.toString().toFloat() <= 100){
+                if (!isNullOrEmptyOrSinglePoint(p0)){
+                    if (p0.toString().toFloat() in 0f..100f) {
                         binding.percentageRateCountTv.error = null
                         calculateEmi()
-                    } else {
-                        binding.percentageRateCountTv.error = "Must be less than 100."
+                    }
+                    else {
+                        binding.percentageRateCountTv.error = "Must be between 0 to 100."
                     }
                 }
             }
@@ -61,11 +62,15 @@ class EmiCalculatorFragment : Fragment() {
         return binding.root
     }
 
+    private fun isNullOrEmptyOrSinglePoint(p0: CharSequence?): Boolean {
+        return (p0.isNullOrEmpty() || (p0.toString() == "."))
+    }
+
     private fun calculateEmi() {
-        val amount = if (binding.loanAmountEt.text.isNullOrEmpty()) 0f else binding.loanAmountEt.text.toString().toFloat()
-        val months = (binding.loanLengthSlider.value*10).toInt()
+        val amount = if (isNullOrEmptyOrSinglePoint(binding.loanAmountEt.text)) 0f else binding.loanAmountEt.text.toString().toFloat()
+        val months = (binding.loanLengthSlider.value*10f).toInt()
         val downPayment = binding.downPaymentSlider.value
-        val interest = if (binding.loanPercentageRateEt.text.isNullOrEmpty()) 0f else binding.loanPercentageRateEt.text.toString().toFloat()/100
+        val interest = if (isNullOrEmptyOrSinglePoint(binding.loanPercentageRateEt.text)) 0f else binding.loanPercentageRateEt.text.toString().toFloat()/100
         val loan = amount-downPayment
         val emiPerMonth = (loan*interest* (1 + interest).toDouble().pow(months.toDouble()))/((1+interest).toDouble().pow(months.toDouble())-1)
         binding.resultAmount.text = getString(R.string.result_emi_amount, NumberFormat.getCurrencyInstance(Locale("en","in")).format(emiPerMonth))
