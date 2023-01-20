@@ -34,8 +34,8 @@ class EmiCalculatorFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
         })
         binding.loanLengthSlider.addOnChangeListener(Slider.OnChangeListener { _, value, _ ->
-            val year = (value*10).toInt()/12
-            val month = (value*10).toInt()-year*12
+            val year = (value).toInt()/12
+            val month = (value).toInt()-year*12
             binding.loanLengthCountTv.text = getString(R.string.loan_length_count, year.toString(), month.toString())
             calculateEmi()
         })
@@ -58,8 +58,15 @@ class EmiCalculatorFragment : Fragment() {
             }
             override fun afterTextChanged(p0: Editable?) { }
         })
-        calculateEmi()
+        updateUi()
         return binding.root
+    }
+
+    private fun updateUi() {
+        binding.loanAmountEt.setText("1000000")
+        binding.loanLengthSlider.value = 120f
+        binding.downPaymentSlider.value = 0f
+        binding.loanPercentageRateEt.setText("0.6")
     }
 
     private fun isNullOrEmptyOrSinglePoint(p0: CharSequence?): Boolean {
@@ -68,7 +75,7 @@ class EmiCalculatorFragment : Fragment() {
 
     private fun calculateEmi() {
         val amount = if (isNullOrEmptyOrSinglePoint(binding.loanAmountEt.text)) 0f else binding.loanAmountEt.text.toString().toFloat()
-        val months = (binding.loanLengthSlider.value*10f).toInt()
+        val months = (binding.loanLengthSlider.value).toInt()
         val downPayment = binding.downPaymentSlider.value
         val interest = if (isNullOrEmptyOrSinglePoint(binding.loanPercentageRateEt.text)) 0f else binding.loanPercentageRateEt.text.toString().toFloat()/100
         val loan = amount-downPayment
